@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-wrapper">
+<div class="hero">
+  <h1>Hi, I'm <span>Ujjwal</span></h1>
+  <p class="subtitle">
+    <span id="typed"></span>
+  </p>
+  <div class="links">
+    <a href="https://github.com/ujjwal739" target="_blank">GitHub</a>
+    <a href="#" target="_blank">LinkedIn</a>
+    <a href="/contact" class="primary">Contact Me</a>
+  </div>
+  <div class="stats">
+    <div><div class="num">2+</div><div class="label">Years Learning</div></div>
+    <div><div class="num">5+</div><div class="label">CTFs Played</div></div>
+    <div><div class="num">8+</div><div class="label">Projects</div></div>
+  </div>
+</div>
+<div class="profile-ring">
+  <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Ujjwal">
+</div>
+</div>
+
+<script>
+const roles = ["Cybersecurity Student", "SOC Analyst & Penetration Tester (Aspiring)", "Digital Forensics", "CTF Player", "Python & Linux"];
+let roleIndex = 0, charIndex = 0, deleting = false;
+const el = document.getElementById("typed");
+
+function type() {
+  const current = roles[roleIndex];
+  if (!deleting) {
+    el.textContent = current.substring(0, charIndex + 1);
+    charIndex++;
+    if (charIndex === current.length) { deleting = true; setTimeout(type, 1500); return; }
+  } else {
+    el.textContent = current.substring(0, charIndex - 1);
+    charIndex--;
+    if (charIndex === 0) { deleting = false; roleIndex = (roleIndex + 1) % roles.length; }
+  }
+  setTimeout(type, deleting ? 40 : 80);
+}
+type();
+</script>
+{% endblock %}

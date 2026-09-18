@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Ujjwal Sharma{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav>
+    <div class="logo">$ ujjwal</div>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/experience">Experience</a></li>
+      <li><a href="/certifications">Certifications</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/login" title="Admin">🔒</a></li>
+    </ul>
+  </nav>
+  {% block content %}{% endblock %}
+</body>
+</html>
