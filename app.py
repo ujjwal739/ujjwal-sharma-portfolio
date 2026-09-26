@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-from models import get_db, init_db, init_projects_table
+from models import get_db, init_db, init_projects_table, init_about_table, init_skills_table
 
 load_dotenv()
 
@@ -19,6 +19,8 @@ ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 init_db()
 init_projects_table()
+init_about_table()
+init_skills_table()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -33,10 +35,16 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    db = get_db()
+    about = db.execute('SELECT * FROM about WHERE id = 1').fetchone()
+    skills = db.execute('SELECT * FROM skills ORDER BY created_at DESC').fetchall()
+    db.close()
+    return render_template('index.html', about=about, skills=skills)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('logged_in'):
+        return redirect(url_for('admin_dashboard'))
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -57,8 +65,10 @@ def admin_dashboard():
     db = get_db()
     certs = db.execute('SELECT * FROM certifications ORDER BY created_at DESC').fetchall()
     projs = db.execute('SELECT * FROM projects ORDER BY created_at DESC').fetchall()
+    about = db.execute('SELECT * FROM about WHERE id = 1').fetchone()
+    skills = db.execute('SELECT * FROM skills ORDER BY created_at DESC').fetchall()
     db.close()
-    return render_template('admin_dashboard.html', certs=certs, projs=projs)
+    return render_template('admin_dashboard.html', certs=certs, projs=projs, about=about, skills=skills)
 
 @app.route('/admin/certifications/add', methods=['POST'])
 @login_required
@@ -117,6 +127,16 @@ def add_project():
     db.close()
     return redirect(url_for('admin_dashboard'))
 
+@app.route('/admin/about/update', methods=['POST'])
+@login_required
+def update_about():
+    bio = request.form.get('bio')
+    db = get_db()
+    db.execute('UPDATE about SET bio = ? WHERE id = 1', (bio,))
+    db.commit()
+    db.close()
+    return redirect(url_for('admin_dashboard'))
+
 @app.route('/admin/projects/delete/<int:project_id>', methods=['POST'])
 @login_required
 def delete_project(project_id):
@@ -127,6 +147,26 @@ def delete_project(project_id):
         if os.path.exists(file_path):
             os.remove(file_path)
     db.execute('DELETE FROM projects WHERE id = ?', (project_id,))
+    db.commit()
+    db.close()
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/skills/add', methods=['POST'])
+@login_required
+def add_skill():
+    name = request.form.get('name')
+    if name:
+        db = get_db()
+        db.execute('INSERT INTO skills (name) VALUES (?)', (name,))
+        db.commit()
+        db.close()
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/skills/delete/<int:skill_id>', methods=['POST'])
+@login_required
+def delete_skill(skill_id):
+    db = get_db()
+    db.execute('DELETE FROM skills WHERE id = ?', (skill_id,))
     db.commit()
     db.close()
     return redirect(url_for('admin_dashboard'))

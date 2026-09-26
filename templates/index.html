@@ -22,6 +22,20 @@
 </div>
 </div>
 
+<div class="skills-section">
+  <h2></h2>
+  <div class="skill-tags">
+  {% for skill in skills %}
+    <span class="skill-tag">{{ skill['name'] }}</span>
+  {% endfor %}
+  </div>
+</div>
+
+<div class="about-section">
+  <div class="prompt">whoami<span class="cursor-blink"></span></div>
+  <p>{{ about['bio'] if about else '' }}</p>
+</div>
+
 <script>
 const roles = ["Cybersecurity Student", "SOC Analyst & Penetration Tester (Aspiring)", "Digital Forensics", "CTF Player", "Python & Linux"];
 let roleIndex = 0, charIndex = 0, deleting = false;

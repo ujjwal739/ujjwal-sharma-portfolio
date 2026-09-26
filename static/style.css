@@ -125,3 +125,82 @@ nav a:hover { color: var(--accent); }
   border-radius: 50%;
   object-fit: cover;
 }
+
+.about-section {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.08);
+}
+
+.about-section .prompt {
+  color: var(--accent);
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.about-section .prompt::before {
+  content: "$ ";
+}
+
+.about-section h2 {
+  display: none;
+}
+
+.about-section p {
+  color: var(--text);
+  line-height: 1.8;
+  font-size: 1rem;
+  white-space: pre-line;
+}
+
+.about-section .cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 1rem;
+  background: var(--accent);
+  animation: blink 1s step-start infinite;
+  margin-left: 4px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.skills-section {
+  max-width: 800px;
+  margin: 0 auto 60px auto;
+  padding: 0 30px;
+}
+
+.skills-section h2 {
+  color: var(--accent);
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.skills-section h2::before {
+  content: "$ ls skills/ ";
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
